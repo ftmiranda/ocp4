@@ -1,0 +1,82 @@
+Before provision the PV, create your NFS server:
+
+$ yum install nfs-server
+$ systemctl enable nfs-server —now
+$ firewall-cmd —add-service=nfs
+$ mkdir /<path_to_export>
+$ vi /etc/exports 
+   /<path_to_export  *(rw,sync,no_root_squash)
+$ exportfs -ra (reload nfs configuration)
+$ exportfs #to check if all is exported correctly 
+
+- Cluster administrator permissions
+- Cluster on bare metal
+- Provision a PV with ReadWriteMany
+- Must Have 100Gi
+
+When creating the PV, from the GUI, Storage —> Persistent Volumes —> Create Persistent Volume
+
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: <name_of_pv>
+spec:
+  capacity:
+    storage: 100Gi
+  accessModes:
+    - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: slow. —> delete this line
+  nfs:
+    path: /<path_to_export>
+    server: <IP/FQDN_of_nfs_server>
+
+Configure registry to use storage:
+
+To configure your registry to use storage, change the spec.storage.pvc in the configs.imageregistry/cluster resource:
+
+$ oc edit configs.imageregistry.operator.openshift.io
+
+storage:
+  pvc:
+    claim:
+
+Leave the claim field blank to allow the automatic creation of an image-registry-storage PVC
+
+Check the clusteroperator status:
+$ oc get clusteroperator image-registry
+
+Using the GUI, check if the PV was bounded:
+
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: registry-pv
+  selfLink: /api/v1/persistentvolumes/registry-pv
+  uid: 991e90b5-cdc4-467d-90c3-e2d6fec5dc67
+  resourceVersion: '618985'
+  creationTimestamp: '2020-02-27T00:02:19Z'
+  annotations:
+    pv.kubernetes.io/bound-by-controller: 'yes'
+  finalizers:
+    - kubernetes.io/pv-protection
+spec:
+  capacity:
+    storage: 100Gi
+  nfs:
+    server: workstation.home
+    path: /ocp4-registry
+  accessModes:
+    - ReadWriteMany
+  claimRef:
+    kind: PersistentVolumeClaim
+    namespace: openshift-image-registry
+    name: image-registry-storage
+    uid: 18dba20e-8555-45f9-9fd6-dbd64091d626
+    apiVersion: v1
+    resourceVersion: '618678'
+  persistentVolumeReclaimPolicy: Retain
+  volumeMode: Filesystem
+status:
+  phase: Bound
+
