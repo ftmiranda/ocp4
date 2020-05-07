@@ -1,0 +1,69 @@
+IBM Z<model> 
+
+Network 
+Gateway 
+Brodcase 
+Mask 
+
+
+OpenShift Servers
+Z/VM-name  roll     IP address                        
+
+<z/vm name> - bootstrap IP=<IP address>   
+<z/vm name> - master-0 IP=<IP address>    
+<z/vm name> - master-1 IP=<IP address>   
+<z/vm name> - master-2 IP=<IP address>   
+<z/vm name> - worker-0 IP=<IP address>   
+<z/vm name> - worker-1 IP=<IP address>    
+
+Please paste the PARM file for all VMS:            
+                                          
+
+HAProxy server
+z/vm-name
+<z/vm name>  IP=<IP address>  
+
+
+DNS Entries
+A RECORDS
+
+$> dig <worker1 name>.<domain name> +short
+
+$> dig <worker0 name>.<cluster name>.<domain name>  +short
+
+$> dig etcd-0.<cluster name>.<domain name> +short
+
+$> dig etcd-1.<cluster name>.<domain name>  +short
+
+$> dig etcd-2.<cluster name>.<domain name>  +short
+
+
+CNAME RECORDS
+$> dig api.<cluster name>.<domain name> +short
+
+$> dig api-int.<cluster name>.<domain name> +short
+
+$> dig apps.<cluster name>.<domain name> +short
+
+$> dig test.apps.<cluster name>.<domain name> +short [ tests the "*" record ]
+
+
+SRV RECORDS
+$> dig _etcd-server-ssl._tcp.<cluster name>.<domain name> srv
+
+
+REVERSE RECORDS (there are TWO per IP, I can change that if needed)
+$> dig -x <etcd-0 IP> +short
+
+$> dig -x <etcd-1 IP> +short
+
+$> dig -x <etcd-2 IP> +short
+
+$> dig -x <worker0 IP> +short
+
+$> dig -x <worker1 IP> +short
+
+
+
+
+Please paste the install-config.yaml file bellow
