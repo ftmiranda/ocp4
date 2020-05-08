@@ -37,3 +37,7 @@ function dns {
 }
 
 dns
+
+test
+
+teste
