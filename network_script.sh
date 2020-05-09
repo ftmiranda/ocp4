@@ -1,5 +1,8 @@
 #!/bin/sh
 # This script checks all the pre-configuration for the DNS infrastructure for Red Hat Openshift 4
+# Author Filipe Miranda fmiranda@ibm.com 
+# Contributors: (add your name here if you contributed)
+#
 
 if [ "$1" == "" ]; then
   echo "Usage: `basename $0` master0_name master1_name master2_name worker1_name worker2_name ocp_cluster_name domain_name bootstrap_name"
