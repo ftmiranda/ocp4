@@ -6,7 +6,7 @@ MASTER2_NAME=$3
 WORKER0_NAME=$4
 WORKER1_NAME=$5
 OCP_CLUSTER_NAME=$6
-DOMAIN_NAME=`hostname -d`
+DOMAIN_NAME=$7
 
 function dns {
         echo "Checking DNS name resolution"
@@ -17,7 +17,7 @@ function dns {
         dig $WORKER0_NAME.$DOMAIN_NAME +short
         dig $WORKER1_NAME.$DOMAIN_NAME +short
 
-        echo "Checking etcd-[0-2] NDS name resolution"
+        echo "Checking etcd-[0-2] DNS name resolution"
         
         dig etcd-0.$OCP_CLUSTER_NAME.$DOMAIN_NAME +short
         dig etcd-1.$OCP_CLUSTER_NAME.$DOMAIN_NAME +short
