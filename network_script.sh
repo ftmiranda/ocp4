@@ -16,7 +16,13 @@ function dns {
         dig $MASTER2_NAME.$DOMAIN_NAME +short
         dig $WORKER0_NAME.$DOMAIN_NAME +short
         dig $WORKER1_NAME.$DOMAIN_NAME +short
+
+        echo "Checking etcd-[0-2] NDS name resolution"
         
+        dig etcd-0.$OCP_CLUSTER_NAME.$DOMAIN_NAME +short
+        dig etcd-1.$OCP_CLUSTER_NAME.$DOMAIN_NAME +short
+        dig etcd-2.$OCP_CLUSTER_NAME.$DOMAIN_NAME +short
+
         echo "Checking Reverse IP resolution"
         
         dig -x `dig $MASTER0_NAME.$DOMAIN_NAME +short` +short
