@@ -1,0 +1,5 @@
+openshift.withCluster( 'https://api.ocp1.ocp.local:6443', 'CTo3iXVlrtutWu2ckKpsBMC5V0MrTmnouJUaZLtvCWU8' ) {
+    openshift.withProject( 'fmiranda' ) {
+        echo "Hello from project ${openshift.project()} in cluster ${openshift.cluster()}"
+    }
+}
