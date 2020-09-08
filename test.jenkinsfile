@@ -1,5 +1,22 @@
-openshift.withCluster( 'https://api.ocp1.ocp.local:6443', 'CTo3iXVlrtutWu2ckKpsBMC5V0MrTmnouJUaZLtvCWU8' ) {
-    openshift.withProject( 'fmiranda' ) {
-        echo "Hello from project ${openshift.project()} in cluster ${openshift.cluster()}"
-    }
-}
+apiVersion: build.openshift.io/v1
+kind: BuildConfig
+metadata:
+  name: example
+  namespace: default
+spec:
+  strategy:
+    jenkinsPipelineStrategy:
+      jenkinsfile: |-
+        pipeline {
+          agent {
+            node {
+              label 'nodejs'
+            }
+          }
+          openshift.withCluster( 'https://api.ocp1.ocp.local:6443', 'CTo3iXVlrtutWu2ckKpsBMC5V0MrTmnouJUaZLtvCWU8' ) {
+            openshift.withProject( 'fmiranda' ) {
+              echo "Hello from project ${openshift.project()} in cluster ${openshift.cluster()}"
+            }
+          }
+        } // pipeline
+    type: JenkinsPipeline
